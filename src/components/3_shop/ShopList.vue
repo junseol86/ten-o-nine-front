@@ -1,0 +1,94 @@
+<template>
+    <div id="shop-list">
+        <div id="scroll-container" v-bind:style="{height: height + 'px'}" v-on:scroll="onScroll">
+          <top-bar v-bind:props="topBarProps"></top-bar>
+          <div id="top-bar-space"></div>
+          <div id="shop-list-container">
+            <div class="shop-container" v-for="shop in shops">
+                <shop :key="shop.idx" v-bind:props="shop"></shop>
+            </div>
+          </div>
+          <div v-if="!is_last" id="loading">Loading...</div>
+        </div>
+    </div>
+</template>
+
+<script>
+import TopBar from '../0_reused/TopBar'
+import Shop from './Shop'
+
+const listUrl = 'http://13.124.80.145:8082/api/shops'
+
+export default {
+  components: {TopBar, Shop},
+  name: 'shop-list',
+  data () {
+    return {
+      height: 0,
+      shops: [],
+      region: '',
+      searchWord: '',
+      listPage: 1,
+      is_last: false,
+      topBarProps: {
+        width: 0,
+        page: 'shopList',
+        bgOpacity: 1
+      }
+    }
+  },
+  methods: {
+    getList: function () {
+      if (!this.is_last) {
+        this.$http.get(`${listUrl}?region=${this.region}&search=${this.searchWord}&page=${this.listPage}`)
+            .then((result) => {
+              this.shops = this.shops.concat(result.data.list)
+              this.is_last = result.data.is_last
+              this.listPage++
+            })
+      }
+    },
+    onScroll: function () {
+      this.topBarProps.bgOpacity = document.getElementById('scroll-container').scrollTop > 48 ? 0.3 : 1
+      if (document.getElementById('scroll-container').scrollTop + this.height === document.getElementById('scroll-container').scrollHeight) {
+        this.getList()
+      }
+    }
+  },
+  created () {
+    this.height = window.innerHeight
+    this.getList()
+  },
+  mounted () {
+    this.topBarProps.width = getComputedStyle(document.getElementById('shop-list')).width
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+#scroll-container {
+  position: relative;
+  overflow: scroll;
+  background-color: #222;
+  #shop-list-container {
+    overflow: hidden;
+    &:after {
+        clear: both;
+    }
+    & .shop-container {
+        width: 50%;
+        float: left;
+    }
+  }
+  & #top-bar-space {
+    height: 48px;
+  }
+  & #loading {
+    color: white;
+    background-color: black;
+    text-align: center;
+    height: 48px;
+    line-height: 48px;
+  }
+}
+</style>

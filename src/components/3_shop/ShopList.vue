@@ -4,7 +4,7 @@
           <top-bar v-bind:props="topBarProps"></top-bar>
           <div id="top-bar-space"></div>
           <div id="shop-list-container">
-            <div class="shop-container" v-for="shop in shops">
+            <div class="shop-container" v-for="shop in shops" v-on:click="toDetail(shop.idx)">
                 <shop :key="shop.idx" v-bind:props="shop"></shop>
             </div>
           </div>
@@ -30,11 +30,18 @@ export default {
       searchWord: '',
       listPage: 1,
       is_last: false,
+      // 상세페이지에서 돌아온 것이 아니라면 리스트를 다시 로드
+      toRefresh: true,
       topBarProps: {
         width: 0,
         page: 'shopList',
-        bgOpacity: 1
-      }
+        depth: 'list',
+        bgOpacity: 1,
+        onNavigate: function () {
+          this.toRefresh = true
+        }
+      },
+      scrollTop: 0
     }
   },
   methods: {
@@ -48,19 +55,40 @@ export default {
             })
       }
     },
+    initialLoad: function () {
+      this.shops = []
+      this.is_last = false
+      this.listPage = 1
+      this.getList()
+    },
     onScroll: function () {
       this.topBarProps.bgOpacity = document.getElementById('scroll-container').scrollTop > 48 ? 0.3 : 1
       if (document.getElementById('scroll-container').scrollTop + this.height === document.getElementById('scroll-container').scrollHeight) {
         this.getList()
       }
+    },
+    toDetail: function (shopId) {
+      this.toRefresh = false
+      this.scrollTop = document.getElementById('scroll-container').scrollTop
+      this.$router.push(`shop_detail/${shopId}`)
     }
   },
   created () {
     this.height = window.innerHeight
-    this.getList()
+    // this.getList()
   },
   mounted () {
     this.topBarProps.width = getComputedStyle(document.getElementById('shop-list')).width
+  },
+  activated () {
+    if (this.toRefresh) {
+      // 상세페이지에서 돌아온 상태가 아닐 시 초기 로드
+      this.initialLoad()
+    } else {
+      this.toRefresh = true
+      // 상세페이지에서 돌아온 상태면 이전 스크롤 위치로 복귀
+      document.getElementById('scroll-container').scrollTop = this.scrollTop
+    }
   }
 }
 </script>

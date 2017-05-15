@@ -24,10 +24,16 @@ export default {
       stories: [],
       listPage: 1,
       is_last: false,
+      // 상세페이지에서 돌아온 것이 아니라면 리스트를 다시 로드
+      toRefresh: true,
       topBarProps: {
         width: 0,
         page: 'storyList',
-        bgOpacity: 1
+        depth: 'list',
+        bgOpacity: 1,
+        onNavigate: function () {
+          this.toRefresh = true
+        }
       }
     }
   },
@@ -58,7 +64,6 @@ export default {
   },
   // keep-alive를 사용한 상태에서 다른 사이트를 방문했다가 되돌아올 시 실행된다
   activated () {
-    console.log(this.listPage)
   }
 }
 </script>

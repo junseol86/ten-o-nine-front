@@ -1,17 +1,23 @@
 <template>
     <div id="top-bar" v-bind:style="{width: props.width}">
         <div id="background" v-bind:style="{opacity: props.bgOpacity}"></div>
-        <div class="navigation" v-on:click="routeTo('story_list')">
+        <div class="navigation" v-if="props.depth==='list'" v-on:click="routeTo('story_list')">
             <img v-if="props.page==='storyList'" class="non-trans" src="../../assets/images/interfaces/top_bar/nav_story_on.png">
             <img v-else class="transparent" src="../../assets/images/interfaces/top_bar/nav_story.png">
         </div>
-        <div class="navigation" v-on:click="routeTo('shop_list')">
+        <div class="navigation" v-if="props.depth==='list'" v-on:click="routeTo('shop_list')">
             <img v-if="props.page==='shopList'" class="non-trans" src="../../assets/images/interfaces/top_bar/nav_shop_on.png">
             <img v-else class="transparent" src="../../assets/images/interfaces/top_bar/nav_shop.png">
         </div>
-        <div class="navigation">
+        <div class="navigation" v-if="props.depth==='list'">
             <img v-if="props.page==='favoriteList'" class="non-trans" src="../../assets/images/interfaces/top_bar/nav_favorite_on.png">
             <img v-else class="transparent" src="../../assets/images/interfaces/top_bar/nav_favorite.png">
+        </div>
+        <div class="navigation" v-if="props.depth==='detail'" v-on:click="goBack()">
+            <img class="non-trans" src="../../assets/images/interfaces/top_bar/nav_back.png">
+        </div>
+        <div class="navigation" v-if="props.depth==='detail'">
+            <img class="non-trans" src="../../assets/images/interfaces/top_bar/nav_favorite.png">
         </div>
         <div class="right">
             <img class="non-trans" src="../../assets/images/interfaces/top_bar/top_bar_menu.png">
@@ -29,7 +35,11 @@ export default {
   props: ['props'],
   methods: {
     routeTo: function (destination) {
+      this.props.onNavigate()
       this.$router.push(destination)
+    },
+    goBack: function () {
+      this.$router.go(window.history.back())
     }
   }
 }

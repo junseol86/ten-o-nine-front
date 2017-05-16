@@ -10,14 +10,14 @@
             <img v-else class="transparent" src="../../assets/images/interfaces/top_bar/nav_shop.png">
         </div>
         <div class="navigation" v-if="props.depth==='list'">
-            <img v-if="props.page==='favoriteList'" class="non-trans" src="../../assets/images/interfaces/top_bar/nav_favorite_on.png">
-            <img v-else class="transparent" src="../../assets/images/interfaces/top_bar/nav_favorite.png">
+            <img v-if="props.page==='likeList'" class="non-trans" src="../../assets/images/interfaces/top_bar/nav_like_on.png">
+            <img v-else class="transparent" src="../../assets/images/interfaces/top_bar/nav_like.png">
         </div>
         <div class="navigation" v-if="props.depth==='detail'" v-on:click="goBack()">
             <img class="non-trans" src="../../assets/images/interfaces/top_bar/nav_back.png">
         </div>
         <div class="navigation" v-if="props.depth==='detail'">
-            <img class="non-trans" src="../../assets/images/interfaces/top_bar/nav_favorite.png">
+            <img class="non-trans" src="../../assets/images/interfaces/top_bar/nav_like.png">
         </div>
         <div class="right">
             <img class="non-trans" src="../../assets/images/interfaces/top_bar/top_bar_menu.png">

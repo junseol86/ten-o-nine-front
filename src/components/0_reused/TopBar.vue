@@ -5,7 +5,7 @@
             <img v-if="props.page==='storyList'" class="non-trans" src="../../assets/images/interfaces/top_bar/nav_story_on.png">
             <img v-else class="transparent" src="../../assets/images/interfaces/top_bar/nav_story.png">
         </div>
-        <div class="navigation" v-if="props.depth==='list'" v-on:click="routeTo('shop_list')">
+        <div class="navigation" v-if="props.depth==='list'" v-on:click="routeTo(`../${props.userToken}/shop_list`)">
             <img v-if="props.page==='shopList'" class="non-trans" src="../../assets/images/interfaces/top_bar/nav_shop_on.png">
             <img v-else class="transparent" src="../../assets/images/interfaces/top_bar/nav_shop.png">
         </div>
@@ -13,7 +13,7 @@
             <img v-if="props.page==='likeList'" class="non-trans" src="../../assets/images/interfaces/top_bar/nav_like_on.png">
             <img v-else class="transparent" src="../../assets/images/interfaces/top_bar/nav_like.png">
         </div>
-        <div class="navigation" v-if="props.depth==='detail'" v-on:click="goBack()">
+        <div class="navigation" v-if="props.depth!=='list'" v-on:click="goBack()">
             <img class="non-trans" src="../../assets/images/interfaces/top_bar/nav_back.png">
         </div>
         <div class="navigation" v-if="props.depth==='detail'">

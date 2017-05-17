@@ -4,6 +4,7 @@ import Intro from '@/components/1_intro/Intro'
 import StoryList from '@/components/2_story/StoryList'
 import ShopList from '@/components/3_shop/ShopList'
 import ShopDetail from '@/components/3_shop/ShopDetail'
+import ShopMenuDetail from '@/components/3_shop/ShopMenuDetail'
 
 Vue.use(Router)
 
@@ -15,19 +16,24 @@ export default new Router({
       component: Intro
     },
     {
-      path: '/story_list',
+      path: '/:user_token/story_list',
       name: 'StoryList',
       component: StoryList
     },
     {
-      path: '/shop_list',
+      path: '/:user_token/shop_list',
       name: 'ShopList',
       component: ShopList
     },
     {
-      path: '/shop_detail/:shop_id',
+      path: '/:user_token/shop_detail/:shop_id',
       name: 'ShopDetail',
       component: ShopDetail
+    },
+    {
+      path: '/:user_token/menu_detail/:menu_id',
+      name: 'ShopManuDetail',
+      component: ShopMenuDetail
     }
   ]
 })

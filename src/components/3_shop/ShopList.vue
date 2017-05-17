@@ -24,7 +24,6 @@ export default {
   name: 'shop-list',
   data () {
     return {
-      height: 0,
       shops: [],
       region: '',
       searchWord: '',
@@ -33,6 +32,7 @@ export default {
       // 상세페이지에서 돌아온 것이 아니라면 리스트를 다시 로드
       toRefresh: true,
       topBarProps: {
+        userToken: '',
         width: 0,
         page: 'shopList',
         depth: 'list',
@@ -41,6 +41,7 @@ export default {
           this.toRefresh = true
         }
       },
+      height: 0,
       scrollTop: 0
     }
   },
@@ -56,6 +57,7 @@ export default {
       }
     },
     initialLoad: function () {
+      this.topBarProps.userToken = this.$route.params.user_token
       this.shops = []
       this.is_last = false
       this.listPage = 1

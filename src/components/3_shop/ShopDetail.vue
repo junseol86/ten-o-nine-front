@@ -23,7 +23,7 @@
               <div id="menus" v-if="shopDetail.sites.length > 0">
                 <div id="menus-title">한 잔 메뉴</div>
                 <div id="menu-list">
-                  <div class="menu-container" v-for="menu in shopDetail.menus" :key="menu.idx" >
+                  <div class="menu-container" v-for="menu in shopDetail.menus" :key="menu.idx" v-on:click="toDetail(menu.idx)">
                     <shop-menu v-bind:props="menu"></shop-menu>
                   </div>
                 </div>
@@ -50,6 +50,7 @@ export default {
       shopDetail: {},
       detailLoaded: false,
       topBarProps: {
+        userToken: '',
         width: 0,
         page: 'shopDetail',
         depth: 'detail',
@@ -60,11 +61,14 @@ export default {
         background: '',
         backgroundSize: '',
         backgroundPosition: ''
-      }
+      },
+      height: 0,
+      scrollTop: 0
     }
   },
   methods: {
     initialLoad: function () {
+      this.topBarProps.userToken = this.$route.params.user_token
       this.shopId = this.$route.params.shop_id
       this.detailLoaded = false
     },
@@ -98,6 +102,11 @@ export default {
     scrollToMenu: function () {
       document.getElementById('scroll-container').scrollTop = document.getElementById('menus').offsetTop + 48
       console.log(document.getElementById('menus').offsetTop)
+    },
+    toDetail: function (menuId) {
+      this.toRefresh = false
+      this.scrollTop = document.getElementById('scroll-container').scrollTop
+      this.$router.push(`../menu_detail/${menuId}`)
     }
   },
   created () {

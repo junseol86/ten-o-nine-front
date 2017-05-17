@@ -29,7 +29,7 @@ export default {
         this.transparentLetters = this.transparentLetters.slice(1, this.transparentLetters.length)
       } else {
         clearInterval(this.interval)
-        this.$router.replace('story_list')
+        this.$router.replace('usertoken/story_list')
       }
     }
   },

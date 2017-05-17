@@ -27,6 +27,7 @@ export default {
       // 상세페이지에서 돌아온 것이 아니라면 리스트를 다시 로드
       toRefresh: true,
       topBarProps: {
+        userToken: '',
         width: 0,
         page: 'storyList',
         depth: 'list',
@@ -38,6 +39,9 @@ export default {
     }
   },
   methods: {
+    initialLoad () {
+      this.topBarProps.userToken = this.$route.params.user_token
+    },
     getList: function () {
       if (!this.is_last) {
         this.$http.get(`${listUrl}?page=${this.listPage}`)
@@ -64,6 +68,7 @@ export default {
   },
   // keep-alive를 사용한 상태에서 다른 사이트를 방문했다가 되돌아올 시 실행된다
   activated () {
+    this.initialLoad()
   }
 }
 </script>

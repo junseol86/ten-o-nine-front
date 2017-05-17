@@ -96,7 +96,7 @@ export default {
       this.topBarProps.bgOpacity = document.getElementById('scroll-container').scrollTop > 48 ? 0.3 : 1
     },
     scrollToMenu: function () {
-      document.getElementById('scroll-container').scrollTop = document.getElementById('menus').offsetTop
+      document.getElementById('scroll-container').scrollTop = document.getElementById('menus').offsetTop + 48
       console.log(document.getElementById('menus').offsetTop)
     }
   },
@@ -184,6 +184,7 @@ export default {
       
       & #menus {
         text-align: left;
+        padding: 8px;
         & #menus-title {
           padding: 36px 12px 12px;
           font-size: 1.1em;

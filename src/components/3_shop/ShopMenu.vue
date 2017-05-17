@@ -17,6 +17,8 @@ export default {
     return {
       menuStyle: {},
       thumbnailStyle: {
+        border: '1px solid #222',
+        boxSizing: 'border-box',
         height: '0px',
         background: '',
         backgroundSize: '',

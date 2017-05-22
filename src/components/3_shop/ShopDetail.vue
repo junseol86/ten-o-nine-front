@@ -38,8 +38,9 @@
 import TopBar from '../0_reused/TopBar'
 import Story from '../2_story/Story'
 import ShopMenu from './ShopMenu'
+import Values from '../../scripts/values.js'
 
-const listUrl = 'http://13.124.80.145:8082/api/shops'
+const listUrl = `${Values.values.dev}/api/shops`
 
 export default {
   components: {TopBar, Story, ShopMenu},
@@ -210,9 +211,7 @@ export default {
           }
         }
       }
-
     }
-    
   }
 }
 </style>

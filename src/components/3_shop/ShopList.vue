@@ -16,8 +16,9 @@
 <script>
 import TopBar from '../0_reused/TopBar'
 import Shop from './Shop'
+import Values from '../../scripts/values.js'
 
-const listUrl = 'http://13.124.80.145:8082/api/shops'
+const listUrl = `${Values.values.dist}/api/shops`
 
 export default {
   components: {TopBar, Shop},
@@ -99,7 +100,8 @@ export default {
 #scroll-container {
   position: relative;
   overflow: scroll;
-  background-color: #222;
+  background-color: white;
+  // background-color: #222;
   #shop-list-container {
     overflow: hidden;
     &:after {

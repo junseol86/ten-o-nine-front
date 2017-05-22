@@ -2,6 +2,7 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 
 require('./assets/styles/reset.css')
+require('./assets/styles/ten-o-nine.css')
 
 import Vue from 'vue'
 import App from './App'

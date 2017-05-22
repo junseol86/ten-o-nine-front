@@ -12,8 +12,9 @@
 <script>
 import TopBar from '../0_reused/TopBar'
 import Story from './Story'
+import Values from '../../scripts/values.js'
 
-const listUrl = `http://13.124.80.145:8082/api/stories`
+const listUrl = `${Values.values.dev}/api/stories`
 
 export default {
   components: {TopBar, Story},

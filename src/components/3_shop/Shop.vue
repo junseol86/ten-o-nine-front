@@ -11,6 +11,8 @@
 </template>
 
 <script>
+import Values from '../../scripts/values.js'
+
 export default {
   name: 'shop',
   props: ['props'],
@@ -31,11 +33,12 @@ export default {
     this.areaColorPicked = this.areaColors[Math.floor(Math.random() * this.areaColors.length)]
   },
   mounted () {
+    // console.log(this.props.thumb_img_url.includes('http') ? this.props.thumb_img_url : `${Values.values.dist}/${this.props.thumb_img_url}`)
     this.thumbnailStyle.height = getComputedStyle(document.getElementById('shop')).width
     var ip = require('../../scripts/image_processor.js')
     var bgImg = new Image()
     var self = this
-    bgImg.src = this.props.thumb_img_url
+    bgImg.src = this.props.thumb_img_url.includes('http') ? this.props.thumb_img_url : `${Values.values.dist}/${this.props.thumb_img_url}`
     bgImg.onload = function () {
       var thumbnailBgStyle = ip.imageProcessor().fillImageStyle(document.getElementById('thumbnail'), this)
       self.thumbnailStyle.background = thumbnailBgStyle.background
@@ -52,7 +55,8 @@ export default {
         text-align: right;
         padding: 12px;
         & span {
-            color: white;
+            color: #444;
+            // color: white;
             line-height: 18px;
         }
     }

@@ -5,6 +5,7 @@ import StoryList from '@/components/2_story/StoryList'
 import ShopList from '@/components/3_shop/ShopList'
 import ShopDetail from '@/components/3_shop/ShopDetail'
 import ShopMenuDetail from '@/components/3_shop/ShopMenuDetail'
+import ShopMenuPay from '@/components/3_shop/ShopMenuPay'
 
 Vue.use(Router)
 
@@ -34,6 +35,11 @@ export default new Router({
       path: '/:user_token/menu_detail/:menu_id',
       name: 'ShopManuDetail',
       component: ShopMenuDetail
+    },
+    {
+      path: '/:user_token/menu_pay',
+      name: 'ShopManuPay',
+      component: ShopMenuPay
     }
   ]
 })

@@ -1,13 +1,17 @@
 <template>
     <div id="top-bar" v-bind:style="{width: props.width}">
         <div id="background" v-bind:style="{opacity: props.bgOpacity}"></div>
-        <div class="navigation" v-if="!isSearching && props.depth==='list'" v-on:click="routeTo('story_list')">
+        <div class="navigation" v-if="!isSearching && props.depth==='list'" v-on:click="routeTo(`../../${props.userToken}/story_list`)">
             <img v-if="props.page==='storyList'" class="non-trans" src="../../assets/images/interfaces/top_bar/nav_story_on.png">
             <img v-else class="transparent" src="../../assets/images/interfaces/top_bar/nav_story.png">
         </div>
-        <div class="navigation" v-if="!isSearching && props.depth==='list'" v-on:click="routeTo(`../${props.userToken}/shop_list`)">
-            <img v-if="props.page==='shopList'" class="non-trans" src="../../assets/images/interfaces/top_bar/nav_shop_on.png">
-            <img v-else class="transparent" src="../../assets/images/interfaces/top_bar/nav_shop.png">
+        <div class="navigation" v-if="!isSearching && props.depth==='list'" v-on:click="routeTo(`../../${props.userToken}/shop_list/cafe`)">
+            <img v-if="props.page==='shopList' && props.shopType==='cafe'" class="non-trans" src="../../assets/images/interfaces/top_bar/nav_shop_cafe_on.png">
+            <img v-else class="transparent" src="../../assets/images/interfaces/top_bar/nav_shop_cafe.png">
+        </div>
+        <div class="navigation" v-if="!isSearching && props.depth==='list'" v-on:click="routeTo(`../../${props.userToken}/shop_list/bar`)">
+            <img v-if="props.page==='shopList' && props.shopType==='bar'" class="non-trans" src="../../assets/images/interfaces/top_bar/nav_shop_bar_on.png">
+            <img v-else class="transparent" src="../../assets/images/interfaces/top_bar/nav_shop_bar.png">
         </div>
         <div class="navigation" v-if="!isSearching && props.depth==='list'">
             <img v-if="props.page==='likeList'" class="non-trans" src="../../assets/images/interfaces/top_bar/nav_like_on.png">
@@ -38,7 +42,7 @@
 export default {
   name: 'top-bar',
 //   width: 앱이 표시될 화면의 너비
-  props: ['props'],
+  props: ['props', 'onChangeShopType'],
   data () {
     return {
       isSearching: false
@@ -48,6 +52,10 @@ export default {
     routeTo: function (destination) {
       this.props.onNavigate()
       this.$router.push(destination)
+    //   카페, 바 사이에서 페이지 이동할 때 해당 페이지가 다시 로드되도록 하기 위함
+      if (this.props.page === 'shopList' && destination.includes('shop_list')) {
+        this.onChangeShopType()
+      }
     },
     goBack: function () {
       this.$router.go(window.history.back())

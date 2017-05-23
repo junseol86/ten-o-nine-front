@@ -22,7 +22,7 @@ export default new Router({
       component: StoryList
     },
     {
-      path: '/:user_token/shop_list',
+      path: '/:user_token/shop_list/:type',
       name: 'ShopList',
       component: ShopList
     },

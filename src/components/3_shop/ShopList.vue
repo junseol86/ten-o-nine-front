@@ -1,11 +1,11 @@
 <template>
     <div id="shop-list">
-        <div id="scroll-container" v-bind:style="{height: height + 'px'}" v-on:scroll="onScroll">
-          <top-bar v-bind:props="topBarProps"></top-bar>
+        <div id="scroll-container" v-bind:style="scrollContainerStyle" v-on:scroll="onScroll">
+          <top-bar v-bind:props="topBarProps" v-bind:onChangeShopType="initialLoad"></top-bar>
           <div id="top-bar-space"></div>
           <div id="shop-list-container">
             <div class="shop-container" v-for="shop in shops" v-on:click="toDetail(shop.idx)">
-                <shop :key="shop.idx" v-bind:props="shop"></shop>
+                <shop :key="shop.idx" v-bind:props="shop" v-bind:shopType="topBarProps.shopType"></shop>
             </div>
           </div>
           <div v-if="!is_last" id="loading">Loading...</div>
@@ -34,6 +34,7 @@ export default {
       toRefresh: true,
       topBarProps: {
         userToken: '',
+        shopType: '',
         width: 0,
         page: 'shopList',
         depth: 'list',
@@ -42,6 +43,10 @@ export default {
           this.toRefresh = true
         }
       },
+      scrollContainerStyle: {
+        height: '',
+        backgroundColor: ''
+      },
       height: 0,
       scrollTop: 0
     }
@@ -49,7 +54,7 @@ export default {
   methods: {
     getList: function () {
       if (!this.is_last) {
-        this.$http.get(`${listUrl}?region=${this.region}&search=${this.searchWord}&page=${this.listPage}`)
+        this.$http.get(`${listUrl}?region=${this.region}&search=${this.searchWord}&page=${this.listPage}&st=${this.topBarProps.shopType === 'cafe' ? 'C' : 'A'}`)
             .then((result) => {
               this.shops = this.shops.concat(result.data.list)
               this.is_last = result.data.is_last
@@ -59,6 +64,8 @@ export default {
     },
     initialLoad: function () {
       this.topBarProps.userToken = this.$route.params.user_token
+      this.topBarProps.shopType = this.$route.params.type
+      this.scrollContainerStyle.backgroundColor = this.$route.params.type === 'cafe' ? 'white' : '#111'
       this.shops = []
       this.is_last = false
       this.listPage = 1
@@ -77,7 +84,7 @@ export default {
     }
   },
   created () {
-    this.height = window.innerHeight
+    this.scrollContainerStyle.height = window.innerHeight + 'px'
     // this.getList()
   },
   mounted () {
@@ -100,8 +107,6 @@ export default {
 #scroll-container {
   position: relative;
   overflow: scroll;
-  background-color: white;
-  // background-color: #222;
   #shop-list-container {
     overflow: hidden;
     &:after {

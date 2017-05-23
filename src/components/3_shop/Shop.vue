@@ -4,8 +4,8 @@
             <div id="thumbnail" v-bind:style="thumbnailStyle"></div>
         </div>
         <div id="description">
-            <span v-bind:style="{color: areaColorPicked}">{{ props.area }}</span><br>
-            <span>{{ props.shop_name }}</span>
+            <span v-bind:style="areaStyle">{{ props.area }}</span><br>
+            <span v-bind:style="shopNameStyle">{{ props.shop_name }}</span>
         </div>
     </div>
 </template>
@@ -15,7 +15,7 @@ import Values from '../../scripts/values.js'
 
 export default {
   name: 'shop',
-  props: ['props'],
+  props: ['props', 'shopType'],
   data () {
     return {
       shopStyle: {},
@@ -25,14 +25,21 @@ export default {
         backgroundSize: '',
         backgroundPosition: ''
       },
-      areaColors: ['#ffce74', '#ff7a7c', '#c4cb61', '#70d6ef', '#d070ef'],
-      areaColorPicked: ''
+      shopNameStyle: {
+        color: '',
+        fontSize: '1.1em',
+        fontWeight: 'bold'
+      },
+      // areaColors: ['#ffce74', '#ff7a7c', '#c4cb61', '#70d6ef', '#d070ef'],
+      areaStyle: {
+        fontSize: '0.9em',
+        color: ''
+      }
     }
   },
-  created () {
-    this.areaColorPicked = this.areaColors[Math.floor(Math.random() * this.areaColors.length)]
-  },
   mounted () {
+    this.shopNameStyle.color = this.shopType === 'cafe' ? '#555' : 'white'
+    this.areaStyle.color = this.shopType === 'cafe' ? '#e9c27a' : '#9a4f5f'
     // console.log(this.props.thumb_img_url.includes('http') ? this.props.thumb_img_url : `${Values.values.dist}/${this.props.thumb_img_url}`)
     this.thumbnailStyle.height = getComputedStyle(document.getElementById('shop')).width
     var ip = require('../../scripts/image_processor.js')
@@ -55,8 +62,6 @@ export default {
         text-align: right;
         padding: 12px;
         & span {
-            color: #444;
-            // color: white;
             line-height: 18px;
         }
     }

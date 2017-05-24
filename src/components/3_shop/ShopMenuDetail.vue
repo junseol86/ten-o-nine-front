@@ -5,9 +5,12 @@
           <div id="top-bar-space"></div>
           <div id="menu-detail" v-if="detailLoaded">
             <div id="menu-info">
-                <div id="menu-image" v-bind:style="menuImageStyle"></div>
-                <div id="shop-name">@{{ menuDetail.shop_name }}</div>
-                <div id="menu-name">{{ menuDetail.menu_name }}</div>
+                <div id="menu-bg" v-bind:style="menuBgStyle"></div>
+                <div id="menu-above-bg" v-bind:style="{width: windowWidth}">
+                  <div id="menu-image" v-bind:style="menuImageStyle"></div>
+                  <div id="shop-name">@{{ shopName }}</div>
+                  <div id="menu-name">{{ menuDetail.menu_name }}</div>
+                </div>
             </div>
             <div id="menu-content" v-html="menuDetail.content"></div>
           </div>
@@ -23,8 +26,10 @@
 
 <script>
 import TopBar from '../0_reused/TopBar'
-import Background from '../../assets/images/backgrounds/liquid_bg_orange_clear.jpg'
-const detailUrl = 'http://13.124.80.145:8082/api/menus'
+import Background from '../../assets/images/backgrounds/liquid_bg_orange_dull.jpg'
+import Values from '../../scripts/values.js'
+
+const detailUrl = `${Values.values.dist}/api/menus`
 const availableUrl = `http://13.124.80.145:8082/api/users`
 // const availableUrl = `http://localhost:8082/api/users`
 
@@ -33,6 +38,7 @@ export default {
   name: 'shop-detail',
   data () {
     return {
+      shopName: '',
       menuId: 0,
       availabilityChecked: false,
       available: false,
@@ -49,12 +55,19 @@ export default {
         backgroundSize: '',
         backgroundPosition: ''
       },
+      menuBgStyle: {
+        width: '',
+        background: '',
+        backgroundSize: '',
+        backgroundPosition: ''
+      },
+      windowWidth: '',
       bottomButtonStyle: {
         width: '',
         opacity: 1,
         height: '56px',
         position: 'absolute',
-        backgroundImage: 'url(' + Background + ')',
+        backgroundImage: '',
         backgroundSize: '',
         backgroundPosition: ''
       },
@@ -93,19 +106,23 @@ export default {
     },
     goToPay: function () {
       if (this.available) {
-        this.$router.push('../menu_pay')
+        this.$router.push('../../../menu_pay')
       }
     },
     setMenuImage: function () {
       var ip = require('../../scripts/image_processor.js')
-      var bgImg = new Image()
       var self = this
-      bgImg.src = this.menuDetail.thumb_img_url
+      var bgImg = new Image()
+      bgImg.src = `${Values.values.dist}/${this.menuDetail.thumb_img_url}`
       bgImg.onload = function () {
         var resultStyle = ip.imageProcessor().fillImageStyle(document.getElementById('menu-image'), this)
         self.menuImageStyle.background = resultStyle.background
         self.menuImageStyle.backgroundSize = resultStyle.backgroundSize
         self.menuImageStyle.backgroundPosition = resultStyle.backgroundPosition
+        var resultStyle2 = ip.imageProcessor().fillImageStyle(document.getElementById('menu-info'), this)
+        self.menuBgStyle.background = resultStyle2.background
+        self.menuBgStyle.backgroundSize = resultStyle2.backgroundSize
+        self.menuBgStyle.backgroundPosition = resultStyle2.backgroundPosition
       }
     },
     onScroll: function () {
@@ -121,11 +138,15 @@ export default {
   },
   created () {
     this.height = window.innerHeight
+    this.shopName = this.$route.params.shop_name
   },
   mounted () {
     this.topBarProps.width = getComputedStyle(document.getElementById('shop-detail')).width
+    this.windowWidth = getComputedStyle(document.getElementById('shop-detail')).width
+    this.menuBgStyle.width = Number(getComputedStyle(document.getElementById('shop-detail')).width.replace('px', '')) + 20 + 'px'
     this.bottomButtonStyle.width = getComputedStyle(document.getElementById('shop-detail')).width
     this.backgroundHeight = 772 * Number(this.bottomButtonStyle.width.replace('px', '')) / 1280
+    this.bottomButtonStyle.backgroundImage = `url('${Background}')`
     this.bottomButtonStyle.backgroundSize = `${this.bottomButtonStyle.width} ${this.backgroundHeight}px`
     // this.bottomButtonStyle.backgroundPosition = `0 ${(this.backgroundHeight - 56 / 2)}px`
   },
@@ -146,26 +167,43 @@ export default {
   }
   & #menu-info {
     background-color: black;
-    padding: 12px 0 36px;
-    & #menu-image {
-        width: 160px;
-        height: 200px;
-        margin: 0 auto;
+    height: 360px;
+    position: relative;
+    overflow: hidden;
+    & #menu-bg {
+      position: absolute;
+      left: -10px;
+      top: -10px;
+      height: 380px;
+      -webkit-filter: blur(10px);
+      -moz-filter: blur(10px);
+      -o-filter: blur(10px);
+      -ms-filter: blur(10px);
+      filter: blur(10px);
+      opacity: 0.5;
     }
-    & #shop-name {
-        color:white;
-        margin: 12px;
-        font-size: 0.9em;
-        opacity: 0.5;
-    }
-    & #menu-name {
-        color:white;
-        font-size: 1.4em;
+    & #menu-above-bg {
+      position: absolute;
+      & #menu-image {
+          width: 160px;
+          height: 200px;
+          margin: 48px auto 0;
+      }
+      & #shop-name {
+          color:white;
+          margin: 12px;
+          font-size: 0.9em;
+          opacity: 0.5;
+      }
+      & #menu-name {
+          color:white;
+          font-size: 1.4em;
+      }
     }
   }
   & #menu-content {
-      padding: 24px;
-      background-color: #222;
+      // padding: 24px;
+      // background-color: #222;
   }
   & #bottom-space {
     height: 56px;

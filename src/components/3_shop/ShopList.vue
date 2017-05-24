@@ -54,6 +54,7 @@ export default {
   methods: {
     getList: function () {
       if (!this.is_last) {
+        console.log(`${listUrl}?region=${this.region}&search=${this.searchWord}&page=${this.listPage}&st=${this.topBarProps.shopType === 'cafe' ? 'C' : 'A'}`)
         this.$http.get(`${listUrl}?region=${this.region}&search=${this.searchWord}&page=${this.listPage}&st=${this.topBarProps.shopType === 'cafe' ? 'C' : 'A'}`)
             .then((result) => {
               this.shops = this.shops.concat(result.data.list)
@@ -73,14 +74,14 @@ export default {
     },
     onScroll: function () {
       this.topBarProps.bgOpacity = document.getElementById('scroll-container').scrollTop > 48 ? 0.3 : 1
-      if (document.getElementById('scroll-container').scrollTop + this.height === document.getElementById('scroll-container').scrollHeight) {
+      if (document.getElementById('scroll-container').scrollTop + window.innerHeight === document.getElementById('scroll-container').scrollHeight) {
         this.getList()
       }
     },
     toDetail: function (shopId) {
       this.toRefresh = false
       this.scrollTop = document.getElementById('scroll-container').scrollTop
-      this.$router.push(`shop_detail/${shopId}`)
+      this.$router.push(`../shop_detail/${this.topBarProps.shopType}/${shopId}`)
     }
   },
   created () {

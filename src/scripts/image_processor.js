@@ -23,7 +23,11 @@
         return {
           background: `url(${image.src})`,
           backgroundSize: `${bgW}px ${bgH}px`,
-          backgroundPosition: `${bgX}px ${bgY}px`
+          backgroundPosition: `${bgX}px ${bgY}px`,
+          bgW: bgW,
+          bgH: bgH,
+          bgX: bgX,
+          bgY: bgY
         }
       }
     }

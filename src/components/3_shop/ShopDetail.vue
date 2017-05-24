@@ -7,23 +7,23 @@
             <div id="shop-image" v-bind:style="shopImageStyle"></div>
             <span id="shop-name">{{ shopDetail.shop_name }}</span>
             <div id="area-and-address">{{ shopDetail.area }} | {{ shopDetail.addr}}</div>
-            <div id="tels"><span v-for="tel in shopDetail.tels">{{ tel }}</span></div>
+            <div id="tels"><span v-for="tel in shopDetail.tels" v-bind:style="{color: telsColor}">{{ tel }}</span></div>
             <div id="see-menu-btn">
-              <span v-on:click="scrollToMenu()">한 잔 메뉴 보기</span>
+              <span v-on:click="scrollToMenu()">오늘-하나 메뉴 보기</span>
             </div>
             <story v-for="story in shopDetail.stories" :key="story.idx" v-bind:props="story"></story>
             <div id="below-stories">
-              <div id="sites" v-if="shopDetail.sites.length > 0">
+              <div id="sites" v-if="shopDetail.sites && shopDetail.sites.length > 0">
                 <div id="sites-title">사이트 바로가기</div>
                 <div class="site" v-for="site in shopDetail.sites">
                   <span>●</span>
                   {{ site }}
-                  </div>
+                </div>
               </div>
-              <div id="menus" v-if="shopDetail.sites.length > 0">
-                <div id="menus-title">한 잔 메뉴</div>
+              <div id="menus" v-if="shopDetail.menus.length > 0">
+                <div id="menus-title">오늘-하나 메뉴</div>
                 <div id="menu-list">
-                  <div class="menu-container" v-for="menu in shopDetail.menus" :key="menu.idx" v-on:click="toDetail(menu.idx)">
+                  <div class="menu-container" v-for="menu in shopDetail.menus" :key="menu.idx" v-on:click="toDetail(shopDetail.shop_name, menu.idx)">
                     <shop-menu v-bind:props="menu"></shop-menu>
                   </div>
                 </div>
@@ -40,7 +40,7 @@ import Story from '../2_story/Story'
 import ShopMenu from './ShopMenu'
 import Values from '../../scripts/values.js'
 
-const listUrl = `${Values.values.dev}/api/shops`
+const listUrl = `${Values.values.dist}/api/shops`
 
 export default {
   components: {TopBar, Story, ShopMenu},
@@ -48,8 +48,10 @@ export default {
   data () {
     return {
       shopId: 0,
+      shopType: '',
       shopDetail: {},
       detailLoaded: false,
+      telsColor: '',
       topBarProps: {
         userToken: '',
         width: 0,
@@ -71,6 +73,8 @@ export default {
     initialLoad: function () {
       this.topBarProps.userToken = this.$route.params.user_token
       this.shopId = this.$route.params.shop_id
+      this.shopType = this.$route.params.shop_type
+      this.telsColor = this.$route.params.shop_type === 'cafe' ? '#e9c27a' : '#9a4f5f'
       this.detailLoaded = false
     },
     getDetail: function () {
@@ -88,7 +92,7 @@ export default {
       var ip = require('../../scripts/image_processor.js')
       var bgImg = new Image()
       var self = this
-      bgImg.src = this.shopDetail.thumb_img_url
+      bgImg.src = `${Values.values.dist}/${this.shopDetail.thumb_img_url}`
       bgImg.onload = function () {
         var resultStyle = ip.imageProcessor().fillImageStyle(document.getElementById('shop-image'), this)
         console.log(resultStyle)
@@ -104,10 +108,10 @@ export default {
       document.getElementById('scroll-container').scrollTop = document.getElementById('menus').offsetTop + 48
       console.log(document.getElementById('menus').offsetTop)
     },
-    toDetail: function (menuId) {
+    toDetail: function (shopName, menuId) {
       this.toRefresh = false
       this.scrollTop = document.getElementById('scroll-container').scrollTop
-      this.$router.push(`../menu_detail/${menuId}`)
+      this.$router.push(`../../menu_detail/${shopName}/${this.shopType}/${menuId}`)
     }
   },
   created () {
@@ -150,7 +154,7 @@ export default {
     & #tels {
       padding: 0 0 20px 0;
       & span {
-        color: #a00354;
+        // color: #a00354;
         padding: 0 8px;
         border-right: 1px solid #bfbfbf;
         &:last-child {

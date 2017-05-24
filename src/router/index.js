@@ -27,12 +27,12 @@ export default new Router({
       component: ShopList
     },
     {
-      path: '/:user_token/shop_detail/:shop_id',
+      path: '/:user_token/shop_detail/:shop_type/:shop_id',
       name: 'ShopDetail',
       component: ShopDetail
     },
     {
-      path: '/:user_token/menu_detail/:menu_id',
+      path: '/:user_token/menu_detail/:shop_name/:shop_type/:menu_id',
       name: 'ShopManuDetail',
       component: ShopMenuDetail
     },

@@ -7,6 +7,8 @@
 </template>
 
 <script>
+import Values from '../../scripts/values.js'
+
 export default {
   name: 'story',
   props: ['props'],
@@ -19,7 +21,7 @@ export default {
     var ip = require('../../scripts/image_processor.js')
     var bgImg = new Image()
     var self = this
-    bgImg.src = this.props.thumb_img_url
+    bgImg.src = `${Values.values.dist}/${this.props.thumb_img_url}`
     bgImg.onload = function () {
       self.storyStyle = ip.imageProcessor().fillImageStyle(self.$el, this)
     }

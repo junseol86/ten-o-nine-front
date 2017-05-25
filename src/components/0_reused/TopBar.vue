@@ -1,15 +1,15 @@
 <template>
     <div id="top-bar" v-bind:style="{width: props.width}">
         <div id="background" v-bind:style="{opacity: props.bgOpacity}"></div>
-        <div class="navigation" v-if="!isSearching && props.depth==='list'" v-on:click="routeTo(`../../${props.userToken}/story_list`)">
+        <div class="navigation" v-if="!isSearching && props.depth==='list'" v-on:click="routeTo(`../story_list`)">
             <img v-if="props.page==='storyList'" class="non-trans" src="../../assets/images/interfaces/top_bar/nav_story_on.png">
             <img v-else class="transparent" src="../../assets/images/interfaces/top_bar/nav_story.png">
         </div>
-        <div class="navigation" v-if="!isSearching && props.depth==='list'" v-on:click="routeTo(`../../${props.userToken}/shop_list/cafe`)">
+        <div class="navigation" v-if="!isSearching && props.depth==='list'" v-on:click="routeTo(`../shop_list/cafe`)">
             <img v-if="props.page==='shopList' && props.shopType==='cafe'" class="non-trans" src="../../assets/images/interfaces/top_bar/nav_shop_cafe_on.png">
             <img v-else class="transparent" src="../../assets/images/interfaces/top_bar/nav_shop_cafe.png">
         </div>
-        <div class="navigation" v-if="!isSearching && props.depth==='list'" v-on:click="routeTo(`../../${props.userToken}/shop_list/bar`)">
+        <div class="navigation" v-if="!isSearching && props.depth==='list'" v-on:click="routeTo(`../shop_list/bar`)">
             <img v-if="props.page==='shopList' && props.shopType==='bar'" class="non-trans" src="../../assets/images/interfaces/top_bar/nav_shop_bar_on.png">
             <img v-else class="transparent" src="../../assets/images/interfaces/top_bar/nav_shop_bar.png">
         </div>

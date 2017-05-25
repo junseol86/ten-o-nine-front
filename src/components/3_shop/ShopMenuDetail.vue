@@ -30,12 +30,16 @@ import Background from '../../assets/images/backgrounds/liquid_bg_orange_dull.jp
 import Values from '../../scripts/values.js'
 
 const detailUrl = `${Values.values.dist}/api/menus`
-const availableUrl = `http://13.124.80.145:8082/api/users`
-// const availableUrl = `http://localhost:8082/api/users`
+const availableUrl = `${Values.values.dist}/api/user/coupon`
 
 export default {
   components: {TopBar},
   name: 'shop-detail',
+  computed: {
+    userToken () {
+      return this.$store.getters.getUserToken
+    }
+  },
   data () {
     return {
       shopName: '',
@@ -44,7 +48,6 @@ export default {
       available: false,
       backgroundHeight: 0,
       topBarProps: {
-        userToken: '',
         width: 0,
         page: 'menuDetail',
         depth: 'menu',
@@ -77,8 +80,8 @@ export default {
   },
   methods: {
     initialLoad: function () {
-      this.topBarProps.userToken = this.$route.params.user_token
       this.menuId = this.$route.params.menu_id
+      this.shopName = this.$route.params.shop_name
       this.detailLoaded = false
     },
     getDetail: function () {
@@ -92,12 +95,14 @@ export default {
       }
     },
     checkAvailable: function () {
-      this.$http.get(`${availableUrl}/available`)
-      // this.$http.get(`${availableUrl}/available`, {
-      //   headers: { 'access_token': 'haha' }
-      // })
+      this.$http.get(`${availableUrl}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'access-token': this.userToken
+        }
+      })
       .then((result) => {
-        this.available = result.data
+        this.available = result.data.valid
         this.bottomButtonStyle.opacity = result.data ? 1 : 0.3
         this.availabilityChecked = true
       }).catch(err => {
@@ -106,7 +111,7 @@ export default {
     },
     goToPay: function () {
       if (this.available) {
-        this.$router.push('../../../menu_pay')
+        this.$router.push(`../../../menu_pay/${this.shopName}/${this.menuDetail.menu_name}`)
       }
     },
     setMenuImage: function () {
@@ -138,7 +143,6 @@ export default {
   },
   created () {
     this.height = window.innerHeight
-    this.shopName = this.$route.params.shop_name
   },
   mounted () {
     this.topBarProps.width = getComputedStyle(document.getElementById('shop-detail')).width
@@ -151,6 +155,10 @@ export default {
     // this.bottomButtonStyle.backgroundPosition = `0 ${(this.backgroundHeight - 56 / 2)}px`
   },
   activated () {
+    if (!this.userToken) {
+      this.$router.push('../../../')
+    }
+
     this.initialLoad()
     this.getDetail()
     this.checkAvailable()
@@ -187,11 +195,11 @@ export default {
       & #menu-image {
           width: 160px;
           height: 200px;
-          margin: 48px auto 0;
+          margin: 52px auto 0;
       }
       & #shop-name {
           color:white;
-          margin: 12px;
+          margin: 16px;
           font-size: 0.9em;
           opacity: 0.5;
       }

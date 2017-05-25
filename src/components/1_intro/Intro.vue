@@ -10,10 +10,12 @@
 </template>
 
 <script>
+
 export default {
   name: 'intro',
   data () {
     return {
+      // userToken: '4VTcaijB/T/1ybUMYzUmzPqQsSM4nq7Y8RwOYnzOG/Us9K8BUflcxVqz3L09cUsX',
       introStyle: {},
       introLogoStyle: {},
       sloganStyle: [],
@@ -22,18 +24,27 @@ export default {
       interval: null
     }
   },
+  computed: {
+    userToken () {
+      return this.$store.getters.getUserToken
+    }
+  },
   methods: {
+    setUserToken (val) {
+      this.$store.commit('setUserToken', val)
+    },
     sloganLoading: function () {
       if (this.transparentLetters.length !== 0) {
         this.clearLetters += this.transparentLetters[0]
         this.transparentLetters = this.transparentLetters.slice(1, this.transparentLetters.length)
       } else {
         clearInterval(this.interval)
-        this.$router.replace('usertoken/story_list')
+        this.$router.replace('story_list')
       }
     }
   },
   created () {
+    this.setUserToken('4VTcaijB/T/1ybUMYzUmzPqQsSM4nq7Y8RwOYnzOG/Us9K8BUflcxVqz3L09cUsX')
     var ip = require('../../scripts/image_processor.js')
     var bgImg = new Image()
     var backgrounds = [

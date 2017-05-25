@@ -14,7 +14,7 @@ import TopBar from '../0_reused/TopBar'
 import Story from './Story'
 import Values from '../../scripts/values.js'
 
-const listUrl = `${Values.values.dev}/api/stories`
+const listUrl = `${Values.values.dist}/api/stories`
 
 export default {
   components: {TopBar, Story},

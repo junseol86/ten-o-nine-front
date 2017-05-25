@@ -17,27 +17,27 @@ export default new Router({
       component: Intro
     },
     {
-      path: '/:user_token/story_list',
+      path: '/story_list',
       name: 'StoryList',
       component: StoryList
     },
     {
-      path: '/:user_token/shop_list/:type',
+      path: '/shop_list/:type',
       name: 'ShopList',
       component: ShopList
     },
     {
-      path: '/:user_token/shop_detail/:shop_type/:shop_id',
+      path: '/shop_detail/:shop_type/:shop_id',
       name: 'ShopDetail',
       component: ShopDetail
     },
     {
-      path: '/:user_token/menu_detail/:shop_name/:shop_type/:menu_id',
+      path: '/menu_detail/:shop_name/:shop_type/:menu_id',
       name: 'ShopManuDetail',
       component: ShopMenuDetail
     },
     {
-      path: '/:user_token/menu_pay',
+      path: '/menu_pay/:shop_name/:menu_name',
       name: 'ShopManuPay',
       component: ShopMenuPay
     }

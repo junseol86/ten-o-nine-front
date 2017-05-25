@@ -82,7 +82,6 @@ export default {
         this.$http.get(`${listUrl}/${this.shopId}`)
             .then((result) => {
               this.shopDetail = result.data
-              console.log(this.shopDetail)
               this.detailLoaded = true
               this.setShopImage()
             })
@@ -95,7 +94,6 @@ export default {
       bgImg.src = `${Values.values.dist}/${this.shopDetail.thumb_img_url}`
       bgImg.onload = function () {
         var resultStyle = ip.imageProcessor().fillImageStyle(document.getElementById('shop-image'), this)
-        console.log(resultStyle)
         self.shopImageStyle.background = resultStyle.background
         self.shopImageStyle.backgroundSize = resultStyle.backgroundSize
         self.shopImageStyle.backgroundPosition = resultStyle.backgroundPosition

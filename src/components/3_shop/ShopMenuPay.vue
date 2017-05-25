@@ -11,12 +11,16 @@
             <img id="loading" class="spin" src="../../assets/images/interfaces/shop/pay_screen_loading.png"/>
           </div>
         </div>
-        <div id="status">{{ isLoading ? '결재 중' : isAvailable ? '오늘의 한 잔' : '내일 또 이용해 주세요' }}</div>
+        <div id="shop-name">@{{ shopName }}</div>
+        <div id="status">{{ isLoading ? '결재 중' : menuName }}</div>
         <div id="slideBar" v-bind:style="{left: slideBarLeft}">
-            <div v-bind:style="buttonContainerStyle" v-on:touchstart="touchStart" v-on:touchmove="touchMove" v-on:touchend="touchEnd">
+            <div v-bind:style="buttonContainerStyle" v-if="isAvailable"  v-on:touchstart="touchStart" v-on:touchmove="touchMove" v-on:touchend="touchEnd">
                 <div v-bind:style="buttonStyle"></div>
             </div>
-            <span v-bind:style="slideBarTextStyle">직원에게 제시하세요</span>
+            <span v-if="isAvailable"  v-bind:style="slideBarTextStyle">직원에게 제시하세요</span>
+            <div id="see-you-tomorrow" v-if="!isAvailable">
+              내일 또 이용해 주세요
+            </div>
         </div>
     </div>
 </template>
@@ -24,19 +28,29 @@
 <script>
 import TopBar from '../0_reused/TopBar'
 import Background from '../../assets/images/backgrounds/liquid_bg_orange_clear.jpg'
+import Values from '../../scripts/values.js'
+
+const availableUrl = `${Values.values.dist}/api/user/coupon`
 
 export default {
   components: {TopBar},
   name: 'shop-detail',
+  computed: {
+    userToken () {
+      return this.$store.getters.getUserToken
+    }
+  },
   data () {
     return {
+      shopName: '',
+      menuName: '',
+      availabilityChecked: false,
       isAvailable: true,
       isLoading: false,
       slideBarLeft: '0px',
       touchStartPoint: 0,
       dragAmount: 0,
       topBarProps: {
-        userToken: '',
         width: 0,
         page: 'menuPay',
         depth: 'pay',
@@ -86,6 +100,49 @@ export default {
         self.bgStyle.backgroundPosition = resultStyle.backgroundPosition
       }
     },
+    availabilityCheck: function () {
+      this.$http.get(`${availableUrl}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'access-token': this.userToken
+        }
+      })
+      .then((result) => {
+        this.isLoading = false
+        this.available = result.data
+        this.availabilityChecked = true
+        this.isAvailable = result.data.valid
+        if (this.availabilityChecked) {
+          this.bgStyle.opacity = result.data.valid ? 1 : 0.5
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    useCoupon: function () {
+      var querystring = require('querystring')
+      this.isLoading = true
+      this.$http.post(`${availableUrl}`,
+      querystring.stringify({
+        'menu_idx': 1000001,
+        'shop_idx': 1000001
+      }),
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'access-token': this.userToken
+          },
+          params: {
+            'menu_idx': 1000001,
+            'shop_idx': 1000001
+          }
+        })
+      .then((result) => {
+        this.availabilityCheck()
+      }).catch(err => {
+        console.log(err)
+      })
+    },
     touchStart: function (event) {
       this.touchStartPoint = event.touches[0].clientX
     },
@@ -99,7 +156,7 @@ export default {
     },
     touchEnd: function (evnet) {
       if (this.dragAmount > 196) {
-        this.isLoading = true
+        this.useCoupon()
       } else {
         this.dragAmount = 0
         this.buttonContainerStyle.left = '0px'
@@ -114,6 +171,11 @@ export default {
     this.bgStyle.height = window.innerHeight + 'px'
     this.slideBarLeft = (window.innerWidth - 256) / 2 + 'px'
     this.setBackground()
+  },
+  activated () {
+    this.shopName = this.$route.params.shop_name
+    this.menuName = this.$route.params.menu_name
+    this.availabilityCheck()
   }
 }
 </script>
@@ -144,12 +206,17 @@ export default {
         height: 160px;
         opacity: 0.99;
     }
+    & #shop-name {
+      color: white;
+      opacity: 0.67;
+      font-size: 1.1em;
+      margin: 36px 0 12px;
+    }
     & #status {
         opacity: 0.99;
         color: white;
         font-size: 2em;
         font-weight: bold;
-        margin-top: 40px;
     }
     & #slideBar {
         position: absolute;
@@ -160,6 +227,15 @@ export default {
         background-color: rgba(0, 0, 0, 0.33);
         border: 1px solid white;
         border-radius: 32px;
+        text-align: center;
+    }
+    & #see-you-tomorrow {
+        color: white;
+        font-size: 1.2em;
+        opacity: 0.99;
+        bottom: 48px;
+        height: 62px;
+        line-height: 62px;
     }
 }
 
@@ -192,6 +268,5 @@ export default {
     -ms-animation-iteration-count: infinite;
     -ms-animation-timing-function: linear;
 }
-
 
 </style>
